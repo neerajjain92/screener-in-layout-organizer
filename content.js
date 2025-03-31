@@ -42,7 +42,7 @@ function applyChanges(columns, width) {
   const topRatios = document.querySelector('#top-ratios');
   if (topRatios) {
     topRatios.style.gridTemplateColumns = gridTemplateValue;
-    console.log(`Modified #top-ratios grid template columns to: ${gridTemplateValue}`);
+    // console.log(`Modified #top-ratios grid template columns to: ${gridTemplateValue}`);
     
     // Fix the alternating row colors
     fixAlternatingRowColors(columns);
@@ -52,7 +52,7 @@ function applyChanges(columns, width) {
   const companyProfile = document.getElementsByClassName('company-profile')[0];
   if (companyProfile) {
     companyProfile.style.width = `${width}%`;
-    console.log(`Modified company-profile width to: ${width}%`);
+    // console.log(`Modified company-profile width to: ${width}%`);
   }
 }
 
@@ -107,6 +107,6 @@ function fixAlternatingRowColors(columns) {
     
     // Update the style element
     styleElement.textContent = css;
-    console.log('Applied fixed alternating row colors based on row position');
+    // console.log('Applied fixed alternating row colors based on row position');
   }
 }

@@ -42,9 +42,8 @@ function applyChanges(columns, width) {
   const topRatios = document.querySelector('#top-ratios');
   if (topRatios) {
     topRatios.style.gridTemplateColumns = gridTemplateValue;
-    // console.log(`Modified #top-ratios grid template columns to: ${gridTemplateValue}`);
     
-    // Fix the alternating row colors
+    // Fix the alternating row colors without overriding other plugins
     fixAlternatingRowColors(columns);
   }
   
@@ -52,7 +51,6 @@ function applyChanges(columns, width) {
   const companyProfile = document.getElementsByClassName('company-profile')[0];
   if (companyProfile) {
     companyProfile.style.width = `${width}%`;
-    // console.log(`Modified company-profile width to: ${width}%`);
   }
 }
 
@@ -77,7 +75,14 @@ function fixAlternatingRowColors(columns) {
     const itemsPerRow = parseInt(columns);
     
     // Create CSS to ensure alternating rows maintain their background color
+    // BUT without using !important to allow other plugins to override these styles
     let css = '';
+    
+    // Add a class to the top-ratios container to mark it as modified
+    const topRatios = document.querySelector('#top-ratios');
+    if (topRatios) {
+      topRatios.classList.add('screener-layout-modified');
+    }
     
     // Process each cell
     cells.forEach((cell, index) => {
@@ -94,19 +99,26 @@ function fixAlternatingRowColors(columns) {
         // Add a custom class to cells in even rows
         cell.classList.add('screener-even-row');
         
-        // Add CSS for this specific cell
-        css += `#top-ratios li:nth-child(${index + 1}) { background-color: var(--stripes) !important; }\n`;
+        // Add CSS for this specific cell - WITHOUT !important
+        css += `#top-ratios li:nth-child(${index + 1}):not([style*="background"]) { background-color: var(--stripes); }\n`;
       } else {
         // Add a custom class to cells in odd rows
         cell.classList.add('screener-odd-row');
         
-        // Ensure cells in odd rows have transparent background
-        css += `#top-ratios li:nth-child(${index + 1}) { background-color: transparent !important; }\n`;
+        // Ensure cells in odd rows have transparent background - WITHOUT !important
+        css += `#top-ratios li:nth-child(${index + 1}):not([style*="background"]) { background-color: transparent; }\n`;
       }
     });
     
+    // Add a style rule that allows inline styles to take precedence
+    css += `
+      /* Allow other plugins to override our styles with inline styles */
+      #top-ratios li[style*="background"] {
+        background-color: attr(style background-color) !important;
+      }
+    `;
+    
     // Update the style element
     styleElement.textContent = css;
-    // console.log('Applied fixed alternating row colors based on row position');
   }
 }
